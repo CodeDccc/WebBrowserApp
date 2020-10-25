@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">WebBrowserApp</string>
+    <string name="edit_text_hint">Please enter a URL...</string>
+    <string name="back_button">Back button</string>
+    <string name="go_button">Go button</string>
+    <string name="next_button">Next button</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+</resources>
