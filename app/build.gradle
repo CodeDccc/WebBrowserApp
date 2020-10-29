@@ -13,7 +13,17 @@ android {
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
-
+    defaultConfig {
+        vectorDrawables.useSupportLibrary = true
+    }
+    android {
+        lintOptions {
+            checkReleaseBuilds false
+            // Or, if you prefer, you can continue to check for errors in release builds,
+            // but continue the build even when errors are found:
+            abortOnError false
+        }
+    }
     buildTypes {
         release {
             minifyEnabled false
@@ -27,8 +37,13 @@ dependencies {
     implementation 'androidx.appcompat:appcompat:1.2.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.0.2'
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
+    implementation 'com.mcxiaoke.volley:library:1.0.19'
+    implementation 'androidx.lifecycle:lifecycle-extensions:2.1.0'
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
-
+    def lifecycle_version = "2.1.0"
+    implementation "androidx.lifecycle:lifecycle-viewmodel:$lifecycle_version"
+    implementation "androidx.lifecycle:lifecycle-livedata:$lifecycle_version"
+    annotationProcessor "androidx.lifecycle:lifecycle-compiler:$lifecycle_version"
 }
