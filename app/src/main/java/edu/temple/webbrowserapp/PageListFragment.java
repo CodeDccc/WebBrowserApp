@@ -1,12 +1,19 @@
 package edu.temple.webbrowserapp;
 
+import android.content.Context;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Adapter;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
+
+import java.util.ArrayList;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -14,7 +21,11 @@ import android.view.ViewGroup;
  * create an instance of this fragment.
  */
 public class PageListFragment extends Fragment {
-
+    private static final String ITEMS_KEY = "items";
+    ArrayList<String> items;
+    View frame;
+    ListView listView;
+    ItemSelected parentActivity;
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -28,30 +39,30 @@ public class PageListFragment extends Fragment {
         // Required empty public constructor
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment PageListFragment.
-     */
     // TODO: Rename and change types and number of parameters
-    public static PageListFragment newInstance(String param1, String param2) {
+    public static PageListFragment newInstance(ArrayList<String> items) {
         PageListFragment fragment = new PageListFragment();
         Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
+        args.putStringArrayList(ITEMS_KEY, items);
         fragment.setArguments(args);
         return fragment;
     }
 
     @Override
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
+        if(context instanceof ItemSelected){
+            parentActivity = (ItemSelected) context;
+        }
+        else{
+            throw new RuntimeException("You must implement ItemSelected interface before attaching this fragment");
+        }
+    }
+    @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
+            items = getArguments().getStringArrayList(ITEMS_KEY);
         }
     }
 
@@ -59,6 +70,12 @@ public class PageListFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_page_list, container, false);
+         inflater.inflate(R.layout.fragment_page_list, container, false);
+         listView = frame.findViewById(R.id.listView);
+         listView.setAdapter(new ArrayAdapter((Context) parentActivity, android.R.layout.simple_list_item_1, items));
+        return frame;
+    }
+    interface ItemSelected{
+        void itemSelected(int index);
     }
 }
