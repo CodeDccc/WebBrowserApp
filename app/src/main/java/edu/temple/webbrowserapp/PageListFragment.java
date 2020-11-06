@@ -70,7 +70,7 @@ public class PageListFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-         inflater.inflate(R.layout.fragment_page_list, container, false);
+         frame = inflater.inflate(R.layout.fragment_page_list, container, false);
          listView = frame.findViewById(R.id.listView);
          listView.setAdapter(new ArrayAdapter((Context) parentActivity, android.R.layout.simple_list_item_1, items));
         return frame;

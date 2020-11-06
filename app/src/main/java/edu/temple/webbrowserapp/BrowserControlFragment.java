@@ -8,13 +8,16 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import java.util.ArrayList;
+
 /**
  * A simple {@link Fragment} subclass.
  * Use the {@link BrowserControlFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
 public class BrowserControlFragment extends Fragment {
-
+    View frame;
+    View newBrowserBtn;
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -59,6 +62,15 @@ public class BrowserControlFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_browser_control, container, false);
+        frame = inflater.inflate(R.layout.fragment_browser_control, container, false);
+        newBrowserBtn = frame.findViewById(R.id.newBrowserBtn);
+        newBrowserBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+               // newFrag.add(new PageViewerFragment());
+               // pagerFragment.getAdapter().notifyDataSetChanged();
+            }
+        });
+        return frame;
     }
 }

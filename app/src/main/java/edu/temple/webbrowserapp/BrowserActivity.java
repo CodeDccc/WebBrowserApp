@@ -12,13 +12,16 @@ import android.os.Bundle;
 import java.util.ArrayList;
 
 
-public class BrowserActivity extends AppCompatActivity implements PageControlFragment.WebSelectable, PageViewerFragment.updatable {
+public class BrowserActivity extends AppCompatActivity implements PageControlFragment.WebSelectable, PageViewerFragment.updatable,
+    PageListFragment.ItemSelected {
     PageViewerFragment pageViewerFragment;
     PageControlFragment pageControlFragment;
     BrowserControlFragment browserControlFragment;
     PageListFragment pageListFragment;
     PagerFragment pagerFragment;
     FragmentManager fragmentManager;
+    ArrayList<String> items;
+    ArrayList<PageViewerFragment> newFrag;
     boolean otherFrag;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,7 +29,10 @@ public class BrowserActivity extends AppCompatActivity implements PageControlFra
         setContentView(R.layout.activity_main);
         otherFrag = findViewById(R.id.page_list) != null;
        // pageViewerFragment = PageViewerFragment.newInstance(urlString);
+
         // pageViewerFragment = new PageViewerFragment();
+        items = new ArrayList<>();
+        newFrag = new ArrayList<>();
         fragmentManager = getSupportFragmentManager();
         Fragment fragment;
         if ((fragment = fragmentManager.findFragmentById(R.id.browser_control)) instanceof BrowserControlFragment)
@@ -51,16 +57,16 @@ public class BrowserActivity extends AppCompatActivity implements PageControlFra
         else {
             pagerFragment = new PagerFragment();
             fragmentManager.beginTransaction()
-                    .add(R.id.page_display, pagerFragment)
+                    .add(R.id.page_display, pagerFragment.newInstance(newFrag))
                     .commit();
         }
         if(otherFrag) {
             if ((fragment = fragmentManager.findFragmentById(R.id.page_list)) instanceof PageListFragment)
-                pageViewerFragment = (PageViewerFragment) fragment;
+                pageListFragment = (PageListFragment) fragment;
             else {
                 pageListFragment = new PageListFragment();
                 fragmentManager.beginTransaction()
-                        .add(R.id.page_list, pageListFragment)
+                        .add(R.id.page_list, pageListFragment.newInstance(items))
                         .commit();
             }
         }
@@ -84,5 +90,9 @@ public class BrowserActivity extends AppCompatActivity implements PageControlFra
         pageControlFragment.updateUrlString(url);
     }
 
+    @Override
+    public void itemSelected(int index) {
+
+    }
 }
 
