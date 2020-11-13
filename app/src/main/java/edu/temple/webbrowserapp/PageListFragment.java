@@ -1,16 +1,21 @@
 package edu.temple.webbrowserapp;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Adapter;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.BaseAdapter;
+import android.widget.ListAdapter;
 import android.widget.ListView;
 
 import java.util.ArrayList;
@@ -22,10 +27,11 @@ import java.util.ArrayList;
  */
 public class PageListFragment extends Fragment {
     private static final String ITEMS_KEY = "items";
+    ListAdapter adapter;
     ArrayList<String> items;
     View frame;
     ListView listView;
-    ItemSelected parentActivity;
+    itemSelected parentActivity;
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -51,8 +57,8 @@ public class PageListFragment extends Fragment {
     @Override
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
-        if(context instanceof ItemSelected){
-            parentActivity = (ItemSelected) context;
+        if(context instanceof itemSelected){
+            parentActivity = (itemSelected) context;
         }
         else{
             throw new RuntimeException("You must implement ItemSelected interface before attaching this fragment");
@@ -72,10 +78,25 @@ public class PageListFragment extends Fragment {
         // Inflate the layout for this fragment
          frame = inflater.inflate(R.layout.fragment_page_list, container, false);
          listView = frame.findViewById(R.id.listView);
-         listView.setAdapter(new ArrayAdapter((Context) parentActivity, android.R.layout.simple_list_item_1, items));
+         //listView.setBackgroundColor(Color.RED);
+
+        adapter = new ArrayAdapter((Context) parentActivity, android.R.layout.simple_list_item_1, items);
+        listView.setAdapter(adapter);
+       // listView.setAdapter(new Pa);
+
+         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+             @Override
+             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                 parentActivity.itemSelected(position);
+                 Log.d("throw", items.get(position));
+             }
+         });
         return frame;
     }
-    interface ItemSelected{
+    interface itemSelected{
         void itemSelected(int index);
+    }
+    public void notifyChange(){
+        ((BaseAdapter)adapter).notifyDataSetChanged();
     }
 }

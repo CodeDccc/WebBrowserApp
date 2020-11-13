@@ -9,16 +9,17 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 
 public class PageControlFragment extends Fragment {
-    View editText;
-    View backButton;
-    View goButton;
-    View nextButton;
-    View frame;
-    private WebSelectable parentActivity;
+    private TextView editText;
+    private ImageButton backButton;
+    private ImageButton goButton;
+    private ImageButton nextButton;
+    private View frame;
+    private webSelectable parentActivity;
 
     public PageControlFragment() {
         // Required empty public constructor
@@ -27,13 +28,14 @@ public class PageControlFragment extends Fragment {
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
 
-        if(context instanceof WebSelectable){
-            parentActivity = (WebSelectable) context;
+        if(context instanceof webSelectable){
+            parentActivity = (webSelectable) context;
         }
         else{
             throw new RuntimeException("You must implement WebSelectable interface before attaching this fragment");
         }
     }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              final Bundle savedInstanceState) {
@@ -63,13 +65,8 @@ public class PageControlFragment extends Fragment {
         });
         return frame;
     }
-    interface WebSelectable{
-        void selectWeb(String urlString);
-        void selectBack();
-        void selectForward();
-    }
-    public void updateUrlString(String urlString) {
-        ((TextView)editText).setText(urlString);
+    public void updateUrlString(String urlString){
+        editText.setText(urlString);
     }
     private String fixUrl(String urlString) {
         if ((urlString.startsWith("http://") )|| (urlString.startsWith("https://"))) {
@@ -77,5 +74,10 @@ public class PageControlFragment extends Fragment {
         } else {
             return "http://" + urlString;
         }
+    }
+    interface webSelectable{
+        void selectWeb(String urlString);
+        void selectBack();
+        void selectForward();
     }
 }

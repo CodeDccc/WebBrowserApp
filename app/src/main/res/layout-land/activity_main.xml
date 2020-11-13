@@ -26,18 +26,12 @@
         android:layout_marginBottom="4dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/page_control">
-
-        <androidx.viewpager2.widget.ViewPager2
-            android:id="@+id/pagerFragment"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent" />
-    </FrameLayout>
+        app:layout_constraintTop_toBottomOf="@+id/page_control"/>
 
     <FrameLayout
         android:id="@+id/browser_control"
-        android:layout_width="191dp"
-        android:layout_height="40dp"
+        android:layout_width="195dp"
+        android:layout_height="39dp"
         android:layout_marginStart="1dp"
         android:layout_marginTop="2dp"
         android:layout_marginEnd="6dp"
@@ -50,8 +44,8 @@
 
     <FrameLayout
         android:id="@+id/page_list"
-        android:layout_width="191dp"
-        android:layout_height="220dp"
+        android:layout_width="192dp"
+        android:layout_height="147dp"
         android:layout_marginStart="1dp"
         android:layout_marginTop="1dp"
         android:layout_marginEnd="6dp"
