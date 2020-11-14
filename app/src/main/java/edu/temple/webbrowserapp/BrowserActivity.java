@@ -1,19 +1,13 @@
 package edu.temple.webbrowserapp;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentStatePagerAdapter;
-import androidx.viewpager.widget.ViewPager;
 
 import android.os.Bundle;
-import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
 
 import java.util.ArrayList;
-
-import static java.lang.System.exit;
 
 
 public class BrowserActivity extends AppCompatActivity implements PageControlFragment.webSelectable, PageViewerFragment.updatable,
@@ -28,24 +22,17 @@ public class BrowserActivity extends AppCompatActivity implements PageControlFra
     Fragment myFragment;
     ArrayList<PageViewerFragment> newFrag;
     boolean otherFrag;
+    boolean checkNewFragInstance;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         otherFrag = findViewById(R.id.page_list) != null;
-       // pageViewerFragment = PageViewerFragment.newInstance(urlString);
-       // pageViewerFragment = findViewById(R.id.pageViewer);
-        // pageViewerFragment = new PageViewerFragment();
-        items = new ArrayList<>();
-       // items.add("https://nba.com");
+        checkNewFragInstance = false;
 
-       // pageListFragment.listView.Adapter
-       // notifyDataSetChanged();
+        items = new ArrayList<>();
         newFrag = new ArrayList<>();
-       /*if(newFrag.size()==0){
-            newFrag.add(new PageViewerFragment());
-            pagerFragment.pageSlider.getAdapter().notifyDataSetChanged();
-        }*/
+
         fragmentManager = getSupportFragmentManager();
         Fragment fragment;
         if ((fragment = fragmentManager.findFragmentById(R.id.browser_control)) instanceof BrowserControlFragment)
@@ -81,35 +68,37 @@ public class BrowserActivity extends AppCompatActivity implements PageControlFra
                 fragmentManager.beginTransaction()
                         .add(R.id.page_list, pageListFragment)
                         .commit();
+              //  ((BaseAdapter)pageListFragment.adapter).notifyDataSetChanged();
             }
         }
-       /* if(newFrag.size()==0){
-            newFrag.add(new PageViewerFragment());
-            //pagerFragment.pageSlider.getAdapter().notifyDataSetChanged();
-        }*/
+
     }
     @Override
     public void selectWeb (String urlString){
      //   pageViewerFragment.showUrl(urlString);
       // myFragment = pagerFragment.pageSlider.getAdapter().getItemPosition(pagerFragment.pageSlider.getCurrentItem());
         //items.add(PageViewerFragment.newInstance(urlString));
-       // pageViewerFragment.showUrl(urlString);
         pagerFragment.callGoPageViewer(urlString);
+       // ((BaseAdapter)pageListFragment.adapter).notifyDataSetChanged();
 
     }
     @Override
     public void selectBack() {
-        //pageViewerFragment.showBack();
         pagerFragment.callBackPageViewer();
     }
     @Override
     public void selectForward() {
-        //pageViewerFragment.showForward();
         pagerFragment.callForwardPageViewer();
     }
     @Override
     public void updateUrlString(String url) {
-        pageControlFragment.updateUrlString(url);
+        if(url.equals("about:blank")){
+            pageControlFragment.updateUrlString("");
+        }
+        else{
+            pageControlFragment.updateUrlString(url);
+        }
+
        // items.add(url);
     }
     @Override
@@ -118,27 +107,33 @@ public class BrowserActivity extends AppCompatActivity implements PageControlFra
     }
     @Override
     public void newFragNote() {
-     newFrag.add(new PageViewerFragment());
+    //
         //newFrag.add(new instanceof pageViewrFragment);
-       // newFrag.add(PageViewerFragment.newInstance(urlString));
-     pagerFragment.pageSlider.getAdapter().notifyDataSetChanged();
-     //notifyDataSetChanged();
-  //   pagerFragment.addFrag();
+       // newFrag.add(PageViewerFragment.newInstance(pageControlFragment.retUrl()));
+        if(checkNewFragInstance==false) {
+            newFrag.add(PageViewerFragment.newInstance(pageControlFragment.retUrl()));
+            checkNewFragInstance=true;
+        }
+        else{
+            newFrag.add(new PageViewerFragment());
+        }
+        pagerFragment.pageSlider.getAdapter().notifyDataSetChanged();
     }
 
     @Override
     public void updateTitle(String title, String url) {
         if(otherFrag) {
             //add item to list
-            if (title == null) {
-                if (!(items.contains(url))) {
+            if(url.equals("about:blank")){
+                //do nothing
+            }
+            else if (title == null) {
+                if (!(items.contains(url) && !url.equals("about:blank"))) {
                     items.add(url.substring(0, 14));
                     ((BaseAdapter)pageListFragment.adapter).notifyDataSetChanged();
-                    // pageListFragment.notifyChange();
                 }
             } else if (!(items.contains(title))) {
                 items.add(title);
-                //pageListFragment.notifyChange();
                  ((BaseAdapter)pageListFragment.adapter).notifyDataSetChanged();
             }
         }

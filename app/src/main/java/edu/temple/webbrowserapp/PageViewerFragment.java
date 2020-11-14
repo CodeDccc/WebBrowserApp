@@ -9,6 +9,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,8 +19,8 @@ import android.webkit.WebViewClient;
 public class PageViewerFragment extends Fragment {
     private static final String URL_KEY = "url";
     View frame;
-    WebView webView;
-    String urlString;
+    private WebView webView;
+    private String urlString;
     private updatable parentActivity;
     public PageViewerFragment() {
         // Required empty public constructor
@@ -65,8 +66,7 @@ public class PageViewerFragment extends Fragment {
         frame = inflater.inflate(R.layout.fragment_page_viewer, container, false);
 
         webView = frame.findViewById(R.id.webView);
-        webView.loadUrl(urlString);
-        webView.setBackgroundColor(Color.RED);
+      // webView.setBackgroundColor(Color.RED);
         webView.getSettings().setJavaScriptEnabled(true);
         webView.setWebViewClient(new WebViewClient(){
             @Override
@@ -74,16 +74,19 @@ public class PageViewerFragment extends Fragment {
                 super.onPageStarted(view, urlString, favicon);
                 parentActivity.updateUrlString(urlString);
                 parentActivity.updateTitle(view.getTitle(), urlString);
-                if(view.getTitle()!=null) {
-                    getActivity().setTitle(view.getTitle());
-                }
+
             }
             @Override
             public void onPageFinished(WebView view, String url) {
                 super.onPageFinished(view, url);
-               // parentActivity.setTitle(view.getTitle()
-               // getActivity().setTitle(view.getTitle());
-                parentActivity.updateTitle(view.getTitle(), view.getUrl());
+
+                getActivity().setTitle(view.getTitle());
+                //parentActivity.updateTitle(view.getTitle(), view.getUrl());
+               // parentActivity.updateUrlString(urlString);
+
+              //  if(getTitle()!=null) {
+             //  if ( getActivity().setTitle(getTitle())!=null){
+               // }
             }
         });
         if (savedInstanceState != null)
@@ -92,6 +95,7 @@ public class PageViewerFragment extends Fragment {
             if (urlString != null) {
                 webView.loadUrl(urlString);
             } else {
+
                 parentActivity.updateUrlString("");
             }
         }
@@ -121,11 +125,11 @@ public class PageViewerFragment extends Fragment {
     }
 
     public String getUrl() {
-        return getUrl();
+        return webView.getUrl();
     }
 
     public String getTitle() {
-        return getTitle();
+        return webView.getTitle();
     }
     interface updatable {
         void updateUrlString(String url);

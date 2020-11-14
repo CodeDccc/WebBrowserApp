@@ -12,8 +12,6 @@ import androidx.viewpager.widget.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Adapter;
-import android.widget.FrameLayout;
 
 import java.util.ArrayList;
 
@@ -26,12 +24,9 @@ public class PagerFragment extends Fragment {
     private static final String FRAG_KEY = "newFrag";
     View frame;
     ViewPager pageSlider;
-    Adapter adapter;
     PageViewerFragment pageViewerFragment;
     BrowserActivity browserActivity;
     ArrayList<PageViewerFragment> newFrag;
-    private PageViewerFragment.updatable parentActivity;
-   // private updateTitable parentActivity;
     public PagerFragment() {
         // Required empty public constructor
     }
@@ -60,15 +55,7 @@ public class PagerFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
        frame = inflater.inflate(R.layout.fragment_pager, container, false);
-     //  Fragment fragment;
-
-       // newFrag = new ArrayList<>();
         pageSlider = frame.findViewById(R.id.pageSlider);
-        //pageSlider.getAdapter().notifyDataSetChanged();
-        //if ((fragment = getChildFragmentManager().findFragmentById(R.id.page_control)) instanceof PageControlFragment)
-           // pageViewerFragment = (PageViewerFragment) fragment;
-       // else {
-           // adapter =
             pageSlider.setAdapter(new FragmentStatePagerAdapter(getChildFragmentManager()) {
                 @NonNull
                 @Override
@@ -80,22 +67,26 @@ public class PagerFragment extends Fragment {
                     return newFrag.size();
                 }
 
-             /*   @Override
+                @Override
                 public int getItemPosition(@NonNull Object object) {
-                     //super.getItemPosition(object);
-                     return POSITION_NONE;
-                }*/
+                    if (newFrag.contains(object))
+                        return newFrag.indexOf(object);
+                    else
+                        return POSITION_NONE;
+                }
             });
             pageSlider.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
                 @Override
                 public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-                   // browserActivity.updateUrlString((newFrag.get(position)).getUrl());
-                   // browserActivity.updateTitle((newFrag.get(position)).getTitle(), (newFrag.get(position)).getUrl() );
+                  //  browserActivity.updateUrlString((newFrag.get(position)).getUrl());
+                  //  browserActivity.updateTitle((newFrag.get(position)).getTitle(), (newFrag.get(position)).getUrl() );
 
                 }
                 @Override
-                public void onPageSelected(int position) {
-                    //browserActivity.updateTitle((newFrag.get(position)).getTitle(), (newFrag.get(position)).getUrl() );
+                public void onPageSelected(int position){
+                    /*if(((newFrag.get(position)).getTitle())!=null  && ((newFrag.get(position)).getUrl())!=null) {
+                        browserActivity.updateTitle((newFrag.get(position)).getTitle(), (newFrag.get(position)).getUrl());
+                    }*/
                     //browserActivity.updateUrlString((newFrag.get(position)).getUrl());
                     //pageSlider.getAdapter().notifyDataSetChanged();
                 }
@@ -105,10 +96,6 @@ public class PagerFragment extends Fragment {
                 }
 
             });
-       // }
-       // pageSlider.getAdapter().notifyDataSetChanged();
-        //PageViewerFragment mypage = new PageViewerFragment();
-       // newFrag.add(new PageViewerFragment());
 
         return frame;
     }
@@ -132,16 +119,11 @@ public class PagerFragment extends Fragment {
         }
     }
     public void clickedFrag(int position){
-        //show fragment at clicked position
-        Fragment myFragment;
-       // myFragment = pageSlider.getCurrentItem();
-      //  pageSlider.getCurrentItem()
         pageSlider.setCurrentItem(position);
     }
     public void callGoPageViewer(String urlString){
         if(newFrag.size()!=0) {
             newFrag.get(pageSlider.getCurrentItem()).showUrl(urlString);
-            pageSlider.getAdapter().notifyDataSetChanged();
         }
     }
     public void callBackPageViewer(){
@@ -154,5 +136,4 @@ public class PagerFragment extends Fragment {
                 newFrag.get(pageSlider.getCurrentItem()).showForward();
             }
     }
-
 }

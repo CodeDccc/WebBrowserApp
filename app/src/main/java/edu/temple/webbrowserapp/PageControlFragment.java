@@ -68,6 +68,9 @@ public class PageControlFragment extends Fragment {
     public void updateUrlString(String urlString){
         editText.setText(urlString);
     }
+    public String retUrl(){
+        return editText.getText().toString();
+    }
     private String fixUrl(String urlString) {
         if ((urlString.startsWith("http://") )|| (urlString.startsWith("https://"))) {
             return urlString;

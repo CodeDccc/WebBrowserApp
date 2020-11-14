@@ -78,25 +78,19 @@ public class PageListFragment extends Fragment {
         // Inflate the layout for this fragment
          frame = inflater.inflate(R.layout.fragment_page_list, container, false);
          listView = frame.findViewById(R.id.listView);
-         //listView.setBackgroundColor(Color.RED);
 
         adapter = new ArrayAdapter((Context) parentActivity, android.R.layout.simple_list_item_1, items);
         listView.setAdapter(adapter);
-       // listView.setAdapter(new Pa);
 
          listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
              @Override
              public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                  parentActivity.itemSelected(position);
-                 Log.d("throw", items.get(position));
              }
          });
         return frame;
     }
     interface itemSelected{
         void itemSelected(int index);
-    }
-    public void notifyChange(){
-        ((BaseAdapter)adapter).notifyDataSetChanged();
     }
 }
