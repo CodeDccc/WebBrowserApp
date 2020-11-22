@@ -22,10 +22,9 @@ import java.util.ArrayList;
  */
 public class PagerFragment extends Fragment {
     private static final String FRAG_KEY = "newFrag";
-    View frame;
-    ViewPager pageSlider;
-    PageViewerFragment pageViewerFragment;
-    BrowserActivity browserActivity;
+    private View frame;
+    private ViewPager pageSlider;
+    private updates parentActivity;
     ArrayList<PageViewerFragment> newFrag;
     public PagerFragment() {
         // Required empty public constructor
@@ -35,7 +34,6 @@ public class PagerFragment extends Fragment {
     public static PagerFragment newInstance(ArrayList<PageViewerFragment> newFrag) {
         PagerFragment fragment = new PagerFragment();
         Bundle args = new Bundle();
-       // newFrag.putString(ARG_PARAM1, param1);
         args.putSerializable(FRAG_KEY, newFrag);
         fragment.setArguments(args);
         return fragment;
@@ -46,7 +44,16 @@ public class PagerFragment extends Fragment {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
           newFrag = (ArrayList)getArguments().getSerializable(FRAG_KEY);
-           // mParam2 = getArguments().getString(ARG_PARAM2);
+        }
+    }
+    @Override
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
+
+        if (context instanceof updates) {
+            parentActivity = (updates) context;
+        } else {
+            throw new RuntimeException("You must implement updates interface to attach this fragment");
         }
     }
     @SuppressLint("ResourceType")
@@ -78,62 +85,45 @@ public class PagerFragment extends Fragment {
             pageSlider.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
                 @Override
                 public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-                  //  browserActivity.updateUrlString((newFrag.get(position)).getUrl());
-                  //  browserActivity.updateTitle((newFrag.get(position)).getTitle(), (newFrag.get(position)).getUrl() );
 
                 }
                 @Override
                 public void onPageSelected(int position){
-                    /*if(((newFrag.get(position)).getTitle())!=null  && ((newFrag.get(position)).getUrl())!=null) {
-                        browserActivity.updateTitle((newFrag.get(position)).getTitle(), (newFrag.get(position)).getUrl());
-                    }*/
-                    //browserActivity.updateUrlString((newFrag.get(position)).getUrl());
-                    //pageSlider.getAdapter().notifyDataSetChanged();
+                    parentActivity.updateTitle((newFrag.get(position)).getTitle());
+                    parentActivity.updateUrlString((newFrag.get(position)).getUrl());
                 }
                 @Override
                 public void onPageScrollStateChanged(int state) {
 
                 }
-
             });
 
         return frame;
     }
-   /* @Override
-    public void onSaveInstanceState(@NonNull Bundle outState) {
-        super.onSaveInstanceState(outState);
-        pageSlider.onSaveInstanceState();
-                //saveState(outState);
-    }
-    @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-        if (savedInstanceState != null){
-            pageSlider.onRestoreInstanceState(savedInstanceState);
-                    //restoreState(savedInstanceState);
-        }
-    }*/
-    public void addFrag(){
-        if(newFrag.size()!=0) {
-            pageSlider.getAdapter().notifyDataSetChanged();
-        }
-    }
+
+   public void notifyWebs() {
+       pageSlider.getAdapter().notifyDataSetChanged();
+   }
     public void clickedFrag(int position){
         pageSlider.setCurrentItem(position);
     }
     public void callGoPageViewer(String urlString){
-        if(newFrag.size()!=0) {
             newFrag.get(pageSlider.getCurrentItem()).showUrl(urlString);
-        }
     }
     public void callBackPageViewer(){
-        if(newFrag.size()!=0) {
             newFrag.get(pageSlider.getCurrentItem()).showBack();
-        }
     }
     public void callForwardPageViewer(){
-            if(newFrag.size()!=0) {
-                newFrag.get(pageSlider.getCurrentItem()).showForward();
-            }
+            newFrag.get(pageSlider.getCurrentItem()).showForward();
+    }
+    interface updates{
+        void updateUrlString(String urlString);
+        void updateTitle(String title);
+    }
+    public String getCurrentUrl(){
+        return (newFrag.get(pageSlider.getCurrentItem())).getUrl();
+    }
+    public String getCurrentTitle() {
+        return (newFrag.get(pageSlider.getCurrentItem())).getTitle();
     }
 }

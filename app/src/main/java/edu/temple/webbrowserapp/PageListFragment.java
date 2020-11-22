@@ -7,11 +7,9 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Adapter;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
@@ -26,11 +24,10 @@ import java.util.ArrayList;
  * create an instance of this fragment.
  */
 public class PageListFragment extends Fragment {
-    private static final String ITEMS_KEY = "items";
-    ListAdapter adapter;
-    ArrayList<String> items;
-    View frame;
-    ListView listView;
+    private static final String FRAG_KEY = "newFrag";
+    private ArrayList<PageViewerFragment> newFrag;
+    private View frame;
+    private ListView listView;
     itemSelected parentActivity;
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -46,14 +43,20 @@ public class PageListFragment extends Fragment {
     }
 
     // TODO: Rename and change types and number of parameters
-    public static PageListFragment newInstance(ArrayList<String> items) {
+    public static PageListFragment newInstance(ArrayList<PageViewerFragment> newFrag) {
         PageListFragment fragment = new PageListFragment();
         Bundle args = new Bundle();
-        args.putStringArrayList(ITEMS_KEY, items);
+        args.putSerializable(FRAG_KEY, newFrag);
         fragment.setArguments(args);
         return fragment;
     }
-
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        if (getArguments() != null) {
+            newFrag = (ArrayList) getArguments().getSerializable(FRAG_KEY);
+        }
+    }
     @Override
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
@@ -64,31 +67,27 @@ public class PageListFragment extends Fragment {
             throw new RuntimeException("You must implement ItemSelected interface before attaching this fragment");
         }
     }
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            items = getArguments().getStringArrayList(ITEMS_KEY);
-        }
-    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-         frame = inflater.inflate(R.layout.fragment_page_list, container, false);
-         listView = frame.findViewById(R.id.listView);
+        frame = inflater.inflate(R.layout.fragment_page_list, container, false);
+        listView = frame.findViewById(R.id.listView);
 
-        adapter = new ArrayAdapter((Context) parentActivity, android.R.layout.simple_list_item_1, items);
-        listView.setAdapter(adapter);
-
-         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        listView.setAdapter(new PageListAdapter(getActivity(), newFrag));
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
              @Override
              public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                  parentActivity.itemSelected(position);
              }
          });
         return frame;
+    }
+    public void notifyWebs(){
+        if(listView != null){
+            ((BaseAdapter) listView.getAdapter()).notifyDataSetChanged();
+        }
     }
     interface itemSelected{
         void itemSelected(int index);
