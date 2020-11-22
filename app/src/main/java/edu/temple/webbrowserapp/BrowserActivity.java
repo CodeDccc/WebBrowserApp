@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.widget.BaseAdapter;
 
@@ -22,12 +23,13 @@ public class BrowserActivity extends AppCompatActivity implements PageControlFra
     FragmentManager fragmentManager;
     ArrayList<String> items;
     ArrayList<PageViewerFragment> newFrag;
+    Intent newIntent;
     boolean otherFrag;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
+        newIntent = new Intent(BrowserActivity.this, BookmarksActivity.class);
         if (savedInstanceState != null)
             newFrag = (ArrayList) savedInstanceState.getSerializable(FRAG_KEY);
         else
@@ -133,6 +135,16 @@ public class BrowserActivity extends AppCompatActivity implements PageControlFra
         notifyWebsites();
         pagerFragment.clickedFrag(newFrag.size() - 1);
         clearId();
+    }
+
+    @Override
+    public void newBookmark() {
+
+    }
+
+    @Override
+    public void savedBookmark() {
+        startActivity(newIntent);
     }
 
     @Override

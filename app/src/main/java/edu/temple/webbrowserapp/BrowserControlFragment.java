@@ -12,7 +12,9 @@ import android.view.ViewGroup;
 
 public class BrowserControlFragment extends Fragment {
     private View frame;
-    private View newBrowserBtn;
+    private View addNewFrag;
+    private View saveBookmark;
+    private View showBookmarks;
     private createdNewFrag parentActivity;
 
     public BrowserControlFragment() {
@@ -34,16 +36,32 @@ public class BrowserControlFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         frame = inflater.inflate(R.layout.fragment_browser_control, container, false);
-        newBrowserBtn = frame.findViewById(R.id.newBrowserBtn);
-        newBrowserBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-               parentActivity.newFragNote();
-            }
-        });
+
+         addNewFrag = frame.findViewById(R.id.addNewFrag);
+         saveBookmark = frame.findViewById(R.id.saveBookmark);
+         showBookmarks = frame.findViewById(R.id.showBookmarks);
+
+
+          View.OnClickListener bookMarkBtns = new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (v.equals(addNewFrag))
+                        parentActivity.newFragNote();
+                    else if (v.equals(saveBookmark))
+                        parentActivity.newBookmark();
+                    else if (v.equals(showBookmarks))
+                        parentActivity.savedBookmark();
+                }
+           };
+
+        addNewFrag.setOnClickListener(bookMarkBtns);
+        saveBookmark.setOnClickListener(bookMarkBtns);
+        showBookmarks.setOnClickListener(bookMarkBtns);
         return frame;
     }
     interface createdNewFrag{
         void newFragNote();
+        void newBookmark();
+        void savedBookmark();
     }
 }

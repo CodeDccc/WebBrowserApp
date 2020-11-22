@@ -9,16 +9,46 @@
     tools:context=".BrowserControlFragment">
 
     <ImageButton
-        android:id="@+id/newBrowserBtn"
-        android:layout_width="match_parent"
-        android:layout_height="96dp"
-        android:layout_marginTop="208dp"
-        android:layout_marginBottom="229dp"
-        android:contentDescription="@string/new_browser_button"
-        android:src="@drawable/new_browser_btn"
+        android:id="@+id/showBookmarks"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="25dp"
+        android:layout_marginTop="238dp"
+        android:layout_marginBottom="251dp"
+        android:src="@drawable/bookmark_button"
+        android:contentDescription="@string/bookmark_button"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageButton
+        android:id="@+id/saveBookmark"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="63dp"
+        android:layout_marginTop="238dp"
+        android:layout_marginEnd="55dp"
+        android:layout_marginBottom="253dp"
+        android:contentDescription="@string/save_button"
+        android:src="@drawable/save_button"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/addNewFrag"
+        app:layout_constraintStart_toEndOf="@+id/showBookmarks"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageButton
+        android:id="@+id/addNewFrag"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="238dp"
+        android:layout_marginEnd="32dp"
+        android:layout_marginBottom="251dp"
+        android:src="@drawable/addbookmark_button"
+        android:contentDescription="@string/addbookmark_button"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/saveBookmark"
         app:layout_constraintTop_toTopOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
