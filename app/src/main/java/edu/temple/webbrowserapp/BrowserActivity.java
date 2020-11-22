@@ -1,115 +1,142 @@
 package edu.temple.webbrowserapp;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.lifecycle.LiveData;
-import androidx.lifecycle.MutableLiveData;
-import androidx.lifecycle.Observer;
-import androidx.lifecycle.ViewModel;
-import androidx.lifecycle.ViewModelProvider;
-import androidx.lifecycle.ViewModelProviders;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 
-import android.content.ClipData;
-import android.content.res.Configuration;
 import android.os.Bundle;
-import android.os.PersistableBundle;
+import android.widget.BaseAdapter;
 
-import android.webkit.WebView;
+import java.util.ArrayList;
 
-import java.util.List;
 
-public class BrowserActivity extends AppCompatActivity implements PageControlFragment.WebSelectable {
-    String urlString = "https://google.com/";
-    private static final String URL_KEY = "urlString";
-    String save;
-    // WebView webView;
+public class BrowserActivity extends AppCompatActivity implements PageControlFragment.webSelectable, PageViewerFragment.updatable,
+    PageListFragment.itemSelected, BrowserControlFragment.createdNewFrag{
     PageViewerFragment pageViewerFragment;
-
+    PageControlFragment pageControlFragment;
+    BrowserControlFragment browserControlFragment;
+    PageListFragment pageListFragment;
+    PagerFragment pagerFragment;
+    FragmentManager fragmentManager;
+    ArrayList<String> items;
+    Fragment myFragment;
+    ArrayList<PageViewerFragment> newFrag;
+    boolean otherFrag;
+    boolean checkNewFragInstance;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        otherFrag = findViewById(R.id.page_list) != null;
+        checkNewFragInstance = false;
 
-       pageViewerFragment = PageViewerFragment.newInstance(urlString);
-       // pageViewerFragment = new PageViewerFragment();
-      //  webView = findViewById(R.id.webView);
+        items = new ArrayList<>();
+        newFrag = new ArrayList<>();
 
-        if (!(getSupportFragmentManager().findFragmentById(R.id.page_control) instanceof PageControlFragment)) {
-            getSupportFragmentManager().beginTransaction()
-                    .add(R.id.page_control, PageControlFragment.newInstance(urlString))
-                    .add(R.id.page_viewer, pageViewerFragment)
-                    .addToBackStack(null)
+        fragmentManager = getSupportFragmentManager();
+        Fragment fragment;
+        if ((fragment = fragmentManager.findFragmentById(R.id.browser_control)) instanceof BrowserControlFragment)
+            browserControlFragment = (BrowserControlFragment) fragment;
+        else {
+            browserControlFragment = new BrowserControlFragment();
+            fragmentManager.beginTransaction()
+                    .add(R.id.browser_control, browserControlFragment)
+                    .commit();
+        }
+        if ((fragment = fragmentManager.findFragmentById(R.id.page_control)) instanceof PageControlFragment)
+            pageControlFragment = (PageControlFragment) fragment;
+        else {
+            pageControlFragment = new PageControlFragment();
+            fragmentManager.beginTransaction()
+                    .add(R.id.page_control, pageControlFragment)
                     .commit();
         }
 
-       /* if (!(getSupportFragmentManager().findFragmentById(R.id.page_viewer) instanceof PageViewerFragment)) {
-            getSupportFragmentManager().beginTransaction()
-                    .add(R.id.page_viewer, pageViewerFragment)
-                    .addToBackStack(null)
+        if ((fragment = fragmentManager.findFragmentById(R.id.page_display)) instanceof PagerFragment)
+            pagerFragment = (PagerFragment) fragment;
+        else {
+            pagerFragment = PagerFragment.newInstance(newFrag);
+            fragmentManager.beginTransaction()
+                    .add(R.id.page_display, pagerFragment)
                     .commit();
-        }*/
-
-
-       /* if(savedInstanceState != null){
-            urlString = savedInstanceState.getString(URL_KEY);
         }
-        else{
-            urlString = "https://google.com/";
-        }*/
-
+        if(otherFrag) {
+            if ((fragment = fragmentManager.findFragmentById(R.id.page_list)) instanceof PageListFragment)
+                pageListFragment = (PageListFragment) fragment;
+            else {
+                pageListFragment = pageListFragment.newInstance(items);
+                fragmentManager.beginTransaction()
+                        .add(R.id.page_list, pageListFragment)
+                        .commit();
+              //  ((BaseAdapter)pageListFragment.adapter).notifyDataSetChanged();
+            }
+        }
 
     }
-   /* public class SharedViewModel extends ViewModel {
-        private MutableLiveData<List<PageControlFragment>> mButtons = new MutableLiveData<>();
+    @Override
+    public void selectWeb (String urlString){
+     //   pageViewerFragment.showUrl(urlString);
+      // myFragment = pagerFragment.pageSlider.getAdapter().getItemPosition(pagerFragment.pageSlider.getCurrentItem());
+        //items.add(PageViewerFragment.newInstance(urlString));
+        pagerFragment.callGoPageViewer(urlString);
+       // ((BaseAdapter)pageListFragment.adapter).notifyDataSetChanged();
 
-        //public SharedViewModel(){
-
-        //}
-        public void select(List list) {
-            mButtons.setValue(list);
-        }
-
-        public LiveData<List<PageControlFragment>> getButtons() {
-            return mButtons;
-        }
-    }*/
-   /*public class SharedViewModel extends ViewModel {
-       private final MutableLiveData<ClipData.Item> selected = new MutableLiveData<>();
-
-       public void select(ClipData.Item item) {
-           selected.setValue(item);
-       }
-
-       public LiveData<ClipData.Item> getSelected() {
-           return selected;
-       }
-   }*/
-
-   /* @Override
-    protected void onSaveInstanceState(@NonNull Bundle outState) {
-        super.onSaveInstanceState(outState);
-        outState.putString(URL_KEY, urlString);
     }
-
-    @Override
-    public void onSaveInstanceState(@NonNull Bundle outState, @NonNull PersistableBundle outPersistentState) {
-        super.onSaveInstanceState(outState, outPersistentState);
-
-    }*/
-
-    @Override
-     public void selectWeb (String urlString){
-            pageViewerFragment.showUrl(urlString);
-     }
-
     @Override
     public void selectBack() {
-      pageViewerFragment.showBack();
+        pagerFragment.callBackPageViewer();
+    }
+    @Override
+    public void selectForward() {
+        pagerFragment.callForwardPageViewer();
+    }
+    @Override
+    public void updateUrlString(String url) {
+        if(url.equals("about:blank")){
+            pageControlFragment.updateUrlString("");
+        }
+        else{
+            pageControlFragment.updateUrlString(url);
+        }
+
+       // items.add(url);
+    }
+    @Override
+    public void itemSelected(int index) {
+        pagerFragment.clickedFrag(index);
+    }
+    @Override
+    public void newFragNote() {
+    //
+        //newFrag.add(new instanceof pageViewrFragment);
+       // newFrag.add(PageViewerFragment.newInstance(pageControlFragment.retUrl()));
+        if(checkNewFragInstance==false) {
+            newFrag.add(PageViewerFragment.newInstance(pageControlFragment.retUrl()));
+            checkNewFragInstance=true;
+        }
+        else{
+            newFrag.add(new PageViewerFragment());
+        }
+        pagerFragment.pageSlider.getAdapter().notifyDataSetChanged();
     }
 
     @Override
-    public void selectForward() {
-      pageViewerFragment.showForward();
+    public void updateTitle(String title, String url) {
+        if(otherFrag) {
+            //add item to list
+            if(url.equals("about:blank")){
+                //do nothing
+            }
+            else if (title == null) {
+                if (!(items.contains(url) && !url.equals("about:blank"))) {
+                    items.add(url.substring(0, 14));
+                    ((BaseAdapter)pageListFragment.adapter).notifyDataSetChanged();
+                }
+            } else if (!(items.contains(title))) {
+                items.add(title);
+                 ((BaseAdapter)pageListFragment.adapter).notifyDataSetChanged();
+            }
+        }
     }
-
 }
+
