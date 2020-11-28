@@ -72,6 +72,7 @@ public class PageViewerFragment extends Fragment {
                 parentActivity.updateTitle(view.getTitle());
             }
         });
+
         if (savedInstanceState != null)
             webView.restoreState(savedInstanceState);
         else {

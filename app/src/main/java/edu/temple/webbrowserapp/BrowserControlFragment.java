@@ -16,6 +16,7 @@ public class BrowserControlFragment extends Fragment {
     private View saveBookmark;
     private View showBookmarks;
     private createdNewFrag parentActivity;
+    BrowserActivity browserActivity;
 
     public BrowserControlFragment() {
         // Required empty public constructor
@@ -57,6 +58,7 @@ public class BrowserControlFragment extends Fragment {
         addNewFrag.setOnClickListener(bookMarkBtns);
         saveBookmark.setOnClickListener(bookMarkBtns);
         showBookmarks.setOnClickListener(bookMarkBtns);
+
         return frame;
     }
     interface createdNewFrag{

@@ -6,22 +6,31 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.BaseAdapter;
 
 import java.util.ArrayList;
 
 
 public class BrowserActivity extends AppCompatActivity implements PageControlFragment.webSelectable, PageViewerFragment.updatable,
-    PageListFragment.itemSelected, BrowserControlFragment.createdNewFrag, PagerFragment.updates{
+    PageListFragment.itemSelected, BrowserControlFragment.createdNewFrag, PagerFragment.updates, BookmarkFragment.recallWeb{
     private final String FRAG_KEY = "newFrag";
-
+    private final String MESSAGE_KEY = "message";
+    private final String COUNT_KEY = "count";
+    private final String WORD = "word";
+    SharedPreferences preferences;
+    SharedPreferences.Editor editor;
     PageControlFragment pageControlFragment;
     BrowserControlFragment browserControlFragment;
     PageListFragment pageListFragment;
     PagerFragment pagerFragment;
     FragmentManager fragmentManager;
-    ArrayList<String> items;
+    //int[] count;
+    int count = 0;
+    String word;
+   // ArrayList<String> items;
     ArrayList<PageViewerFragment> newFrag;
     Intent newIntent;
     boolean otherFrag;
@@ -36,9 +45,15 @@ public class BrowserActivity extends AppCompatActivity implements PageControlFra
             newFrag = new ArrayList<>();
 
         otherFrag = findViewById(R.id.page_list) != null;
+        preferences = getSharedPreferences(MESSAGE_KEY, MODE_PRIVATE);
+        editor = preferences.edit();
+        word = newIntent.getStringExtra(WORD);
 
-        items = new ArrayList<>();
-       // newFrag = new ArrayList<>();
+
+        if(word!=null){
+            Log.d("WORD", word);
+            selectWeb(word);
+        }
 
         fragmentManager = getSupportFragmentManager();
         Fragment fragment;
@@ -139,7 +154,19 @@ public class BrowserActivity extends AppCompatActivity implements PageControlFra
 
     @Override
     public void newBookmark() {
+        //newIntent.putExtra(MESSAGE_KEY, pagerFragment.getCurrentTitle());
+        if(pagerFragment.newFrag.size()!=0) {
+            if(count!=0) {
+                count = preferences.getInt(COUNT_KEY, 0);
+            }
+            editor.putString("string["+count+"]", pagerFragment.getCurrentTitle());
+            count++;
+            editor.putInt(COUNT_KEY, count);
+            editor.apply();
 
+        }
+      //  pagerFragment.callBackPageViewer();
+        //startActivity(newIntent);
     }
 
     @Override
@@ -153,6 +180,11 @@ public class BrowserActivity extends AppCompatActivity implements PageControlFra
             getSupportActionBar().setTitle(title);
         }
         notifyWebsites();
+    }
+
+    @Override
+    public void webRecall(String url) {
+        selectWeb (url);
     }
 }
 

@@ -126,4 +126,5 @@ public class PagerFragment extends Fragment {
     public String getCurrentTitle() {
         return (newFrag.get(pageSlider.getCurrentItem())).getTitle();
     }
+
 }

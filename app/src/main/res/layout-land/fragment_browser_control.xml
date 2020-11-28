@@ -9,30 +9,14 @@
         android:id="@+id/addNewFrag"
         android:layout_width="55dp"
         android:layout_height="55dp"
-        android:layout_marginStart="5dp"
+        android:layout_marginStart="13dp"
         android:layout_marginTop="145dp"
         android:layout_marginBottom="154dp"
         android:contentDescription="@string/addbookmark_button"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/saveButton"
+        app:layout_constraintStart_toEndOf="@+id/saveBookmark"
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/addbookmark_button" />
-
-    <ImageButton
-        android:id="@+id/saveButton"
-        android:layout_width="55dp"
-        android:layout_height="55dp"
-        android:layout_marginStart="5dp"
-        android:layout_marginTop="145dp"
-        android:layout_marginEnd="5dp"
-        android:layout_marginBottom="154dp"
-        android:contentDescription="@string/save_button"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/addNewFrag"
-        app:layout_constraintStart_toEndOf="@+id/showBookmarks"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.473"
-        app:srcCompat="@drawable/save_button" />
 
     <ImageButton
         android:id="@+id/showBookmarks"
@@ -40,12 +24,27 @@
         android:layout_height="55dp"
         android:layout_marginStart="5dp"
         android:layout_marginTop="145dp"
-        android:layout_marginEnd="5dp"
+        android:layout_marginEnd="6dp"
         android:layout_marginBottom="154dp"
         android:contentDescription="@string/bookmark_button"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/saveButton"
+        app:layout_constraintEnd_toStartOf="@+id/saveBookmark"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/bookmark_button" />
+
+    <ImageButton
+        android:id="@+id/saveBookmark"
+        android:layout_width="55dp"
+        android:layout_height="55dp"
+        android:layout_marginStart="5dp"
+        android:layout_marginTop="145dp"
+        android:layout_marginEnd="13dp"
+        android:layout_marginBottom="154dp"
+        android:contentDescription="@string/save_button"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/addNewFrag"
+        app:layout_constraintStart_toEndOf="@+id/showBookmarks"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/save_button" />
 </androidx.constraintlayout.widget.ConstraintLayout>

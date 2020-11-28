@@ -7,6 +7,7 @@
     tools:context=".BookmarksActivity">
 
     <ListView
+        android:id="@+id/listView"
         android:layout_width="311dp"
         android:layout_height="369dp"
         android:layout_marginStart="5dp"
