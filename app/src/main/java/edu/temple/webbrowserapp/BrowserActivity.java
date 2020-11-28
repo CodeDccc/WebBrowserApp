@@ -5,22 +5,30 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.util.Log;
+import android.view.View;
 import android.widget.BaseAdapter;
+import android.widget.Button;
+
+import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 
 public class BrowserActivity extends AppCompatActivity implements PageControlFragment.webSelectable, PageViewerFragment.updatable,
-    PageListFragment.itemSelected, BrowserControlFragment.createdNewFrag, PagerFragment.updates, BookmarkFragment.recallWeb{
+    PageListFragment.itemSelected, BrowserControlFragment.createdNewFrag, PagerFragment.updates{
     private final String FRAG_KEY = "newFrag";
     private final String MESSAGE_KEY = "message";
     private final String COUNT_KEY = "count";
     private final String WORD = "word";
-    SharedPreferences preferences;
+    SharedPreferences prefs;
     SharedPreferences.Editor editor;
     PageControlFragment pageControlFragment;
     BrowserControlFragment browserControlFragment;
@@ -30,10 +38,11 @@ public class BrowserActivity extends AppCompatActivity implements PageControlFra
     //int[] count;
     int count = 0;
     String word;
-   // ArrayList<String> items;
     ArrayList<PageViewerFragment> newFrag;
     Intent newIntent;
     boolean otherFrag;
+    boolean titleFlag;
+    Context context;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -45,11 +54,14 @@ public class BrowserActivity extends AppCompatActivity implements PageControlFra
             newFrag = new ArrayList<>();
 
         otherFrag = findViewById(R.id.page_list) != null;
-        preferences = getSharedPreferences(MESSAGE_KEY, MODE_PRIVATE);
-        editor = preferences.edit();
+        prefs = getSharedPreferences(MESSAGE_KEY, MODE_PRIVATE);
+     //   prefs = PreferenceManager.getDefaultSharedPreferences(BrowserActivity.this);
+        editor = prefs.edit();
+//        editor.clear();
+       // editor.apply();
+
         word = newIntent.getStringExtra(WORD);
-
-
+        titleFlag = prefs.getAll().size()!=0;
         if(word!=null){
             Log.d("WORD", word);
             selectWeb(word);
@@ -155,18 +167,28 @@ public class BrowserActivity extends AppCompatActivity implements PageControlFra
     @Override
     public void newBookmark() {
         //newIntent.putExtra(MESSAGE_KEY, pagerFragment.getCurrentTitle());
+
         if(pagerFragment.newFrag.size()!=0) {
-            if(count!=0) {
-                count = preferences.getInt(COUNT_KEY, 0);
-            }
-            editor.putString("string["+count+"]", pagerFragment.getCurrentTitle());
-            count++;
-            editor.putInt(COUNT_KEY, count);
+            //if(count > 0) {
+             //   count =  preferences.getAll().size();
+          //  }
+          //  editor.putString("string["+count+"]", pagerFragment.getCurrentTitle());
+            //count++;
+            //editor.putInt(COUNT_KEY, count);
+            editor.putString(pagerFragment.getCurrentTitle(), pagerFragment.getCurrentUrl());
+            String dat = prefs.getString(pagerFragment.getCurrentTitle(), pagerFragment.getCurrentUrl());
+            Log.d("WHAT", dat);
             editor.apply();
+            count = prefs.getAll().size();
+            Log.d("BAD", String.valueOf(count));
+            Map<String, ?> allEntries = prefs.getAll();
+            for (Map.Entry<String, ?> entry : allEntries.entrySet()) {
+                Log.d("map values", entry.getKey() + ": " + entry.getValue().toString());
+                Log.d("this", entry.getValue().toString());
+                Log.d("that", entry.getKey());
+            }
 
         }
-      //  pagerFragment.callBackPageViewer();
-        //startActivity(newIntent);
     }
 
     @Override
@@ -182,9 +204,5 @@ public class BrowserActivity extends AppCompatActivity implements PageControlFra
         notifyWebsites();
     }
 
-    @Override
-    public void webRecall(String url) {
-        selectWeb (url);
-    }
 }
 
