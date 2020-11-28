@@ -15,7 +15,7 @@
         <activity android:name=".BookmarksActivity" android:launchMode="singleTop">
 
         </activity>
-        <activity android:name=".BrowserActivity">
+        <activity android:name=".BrowserActivity" android:launchMode="singleInstance">
 
             <!--
             android:configChanges="orientation|screenSize|screenLayout|keyboardHidden"

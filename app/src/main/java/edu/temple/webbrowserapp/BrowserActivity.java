@@ -37,7 +37,7 @@ public class BrowserActivity extends AppCompatActivity implements PageControlFra
     FragmentManager fragmentManager;
     //int[] count;
     int count = 0;
-    String word;
+    //String word;
     ArrayList<PageViewerFragment> newFrag;
     Intent newIntent;
     boolean otherFrag;
@@ -59,9 +59,10 @@ public class BrowserActivity extends AppCompatActivity implements PageControlFra
         editor = prefs.edit();
 //        editor.clear();
        // editor.apply();
-
-        word = newIntent.getStringExtra(WORD);
-        titleFlag = prefs.getAll().size()!=0;
+        Intent inIntent = getIntent();
+        //Bundle bundle = getIntent().getExtras();
+        String word = inIntent.getStringExtra("read");
+        //titleFlag = prefs.getAll().size()!=0;
         if(word!=null){
             Log.d("WORD", word);
             selectWeb(word);
@@ -105,6 +106,45 @@ public class BrowserActivity extends AppCompatActivity implements PageControlFra
             }
         }
 
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Intent inIntent = getIntent();
+        //Bundle bundle = getIntent().getExtras();
+        String word = inIntent.getStringExtra("read");
+        //titleFlag = prefs.getAll().size()!=0;
+        if(word!=null){
+            Log.d("WORD", word);
+            selectWeb(word);
+        }
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        Intent inIntent = getIntent();
+        //Bundle bundle = getIntent().getExtras();
+        String word = inIntent.getStringExtra("read");
+        //titleFlag = prefs.getAll().size()!=0;
+        if(word!=null){
+            Log.d("WORD", word);
+            selectWeb(word);
+        }
+    }
+
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        Intent inIntent = getIntent();
+        //Bundle bundle = getIntent().getExtras();
+        String word = inIntent.getStringExtra("read");
+        //titleFlag = prefs.getAll().size()!=0;
+        if(word!=null){
+            Log.d("WORD", word);
+            selectWeb(word);
+        }
     }
 
     private  void clearId(){

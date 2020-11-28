@@ -26,7 +26,6 @@ import java.util.Map;
 
 public class BookmarksActivity extends AppCompatActivity {
 private final String MESSAGE_KEY = "message";
-private final String COUNT_KEY = "count";
 private final String WORD = "word";
 ArrayList<String> title;
 Intent newIntent;
@@ -34,7 +33,6 @@ ListView listView;
 BaseAdapter adapter;
 SharedPreferences prefs;
 SharedPreferences.Editor editor;
-Map<String, String> words;
 ImageView imageView;
 int pos;
 int count = 0;
@@ -78,8 +76,10 @@ int count = 0;
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                  //newIntent = new Intent(Intent.ACTION_VIEW);
-                 newIntent.putExtra(WORD, parent.getItemAtPosition(position).toString() );
-                 newIntent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                //Bundle bundle = new Bundle();
+               // bundle.putStrin
+                 newIntent.putExtra("read", parent.getItemAtPosition(position).toString());
+                // newIntent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
                  startActivity(newIntent);
                  pos = position;
                  //editor.clear();
