@@ -3,37 +3,30 @@ package edu.temple.webbrowserapp;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.AlertDialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.icu.text.CaseMap;
-import android.net.Uri;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
-import android.service.quicksettings.Tile;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
-
+import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.Map;
 
 public class BookmarksActivity extends AppCompatActivity {
 private final String MESSAGE_KEY = "message";
-private final String WORD = "word";
 ArrayList<String> title;
-Intent newIntent;
 ListView listView;
 BaseAdapter adapter;
 SharedPreferences prefs;
 SharedPreferences.Editor editor;
 ImageView imageView;
+Map<String, String> allEntries;
 int pos;
 int count = 0;
     @Override
@@ -43,18 +36,14 @@ int count = 0;
         setTitle("BookmarksActivity");
         listView = findViewById(R.id.listView);
         imageView = findViewById(R.id.imageView);
-        newIntent = new Intent(BookmarksActivity.this, BrowserActivity.class);
         prefs = getSharedPreferences(MESSAGE_KEY, MODE_PRIVATE);
         editor = prefs.edit();
         title = new ArrayList<>();
+
        // editor.clear();
        // editor.apply();
-        if(count!=0){
-            Log.d("RED", String.valueOf(count));
-        }
-        //message = preferences.getString(MESSAGE_KEY, null);
 
-
+     //   myText.setText(w);
        /* imageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -63,24 +52,34 @@ int count = 0;
                 startActivity(newIntent);
             }
         });*/
-       // title.add(message);
 
         addTitle();
-        //.notifyDataSetChanged();
         adapter = new BookmarkAdapter(this, title);
-
-       // ArrayAdapter adapter = new ArrayAdapter(BookmarksActivity.this, android.R.layout.simple_list_item_1, mobileArray);
 
         listView.setAdapter(adapter);
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                  //newIntent = new Intent(Intent.ACTION_VIEW);
-                //Bundle bundle = new Bundle();
-               // bundle.putStrin
-                 newIntent.putExtra("read", parent.getItemAtPosition(position).toString());
+               // Bundle bundle = new Bundle();
+               // bundle.putString(WORD, (String) allEntries.get(parent.getItemAtPosition(position).toString()));
+                //iIntent.putExtra(WORD, (Bundle) allEntries.get(parent.getItemAtPosition(position).toString()));
+                //iIntent.getBundleExtra(parent.getItemAtPosition(position).toString());
+               // iIntent.putExtra(WORD, parent.getItemAtPosition(position).toString());
+               Intent iIntent = getIntent();
+             //   String ed = allEntries.get(parent.getItemAtPosition(position).toString());
+                iIntent.putExtra(BrowserActivity.WORD, allEntries.get(parent.getItemAtPosition(position).toString()));
+                setResult(RESULT_OK, iIntent);
+               // Intent e = iIntent.putExtra(BrowserActivity.WORD, ed);
+
+                // iIntent.putExtra(WORD, allEntries.get(parent.getItemAtPosition(position).toString()));
+                //Intent e = iIntent.putExtra(WORD, allEntries.get(parent.getItemAtPosition(position).toString()));
+                 //iIntent.getParcelableArrayExtra(parent.getItemAtPosition(position).toString());
+                 //iIntent.
+              //  Log.d("hider", ed);
+               // Log.d("yow", String.valueOf(e));
                 // newIntent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
-                 startActivity(newIntent);
+               //  startActivity(iIntent);
                  pos = position;
                  //editor.clear();
                 // editor.apply();
@@ -118,7 +117,6 @@ int count = 0;
             }
         });
 
-
         /*imageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -130,6 +128,10 @@ int count = 0;
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
                                 title.remove(pos);
+                                editor.remove(parent.getItemAtPosition(pos).toString());
+                                title.remove(parent.getItemAtPosition(pos));
+                                editor.apply();
+                                adapter.notifyDataSetChanged();
                                 //adapter.notifyDataSetChanged();
                             }
                         })
@@ -159,21 +161,16 @@ int count = 0;
                 .setNegativeButton("No", null)
                 .show();*/
     }
-    //confirm deletion
 
 
     //get title
     public void addTitle(){
         count = prefs.getAll().size();
         //count--;
-        Log.d("SAD", String.valueOf(count));
         if(count>0) {
-            Map<String, ?> allEntries = prefs.getAll();
-            for (Map.Entry<String, ?> entry : allEntries.entrySet()) {
-                Log.d("map values", entry.getKey() + ": " + entry.getValue().toString());
-                Log.d("ok", entry.getValue().toString());
+            allEntries = (Map<String, String>) prefs.getAll();
+            for (Map.Entry<String, String> entry : allEntries.entrySet()) {
                 title.add(entry.getKey());
-               // adapter.notifyDataSetChanged();
             }
         }
     }

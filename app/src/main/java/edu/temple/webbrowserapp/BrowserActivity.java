@@ -1,21 +1,18 @@
 package edu.temple.webbrowserapp;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.util.Log;
-import android.view.View;
-import android.widget.BaseAdapter;
-import android.widget.Button;
-
-import org.json.JSONObject;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -24,10 +21,9 @@ import java.util.Map;
 
 public class BrowserActivity extends AppCompatActivity implements PageControlFragment.webSelectable, PageViewerFragment.updatable,
     PageListFragment.itemSelected, BrowserControlFragment.createdNewFrag, PagerFragment.updates{
+    public static final String WORD = "word";
     private final String FRAG_KEY = "newFrag";
     private final String MESSAGE_KEY = "message";
-    private final String COUNT_KEY = "count";
-    private final String WORD = "word";
     SharedPreferences prefs;
     SharedPreferences.Editor editor;
     PageControlFragment pageControlFragment;
@@ -35,14 +31,10 @@ public class BrowserActivity extends AppCompatActivity implements PageControlFra
     PageListFragment pageListFragment;
     PagerFragment pagerFragment;
     FragmentManager fragmentManager;
-    //int[] count;
     int count = 0;
-    //String word;
     ArrayList<PageViewerFragment> newFrag;
     Intent newIntent;
     boolean otherFrag;
-    boolean titleFlag;
-    Context context;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -55,19 +47,10 @@ public class BrowserActivity extends AppCompatActivity implements PageControlFra
 
         otherFrag = findViewById(R.id.page_list) != null;
         prefs = getSharedPreferences(MESSAGE_KEY, MODE_PRIVATE);
-     //   prefs = PreferenceManager.getDefaultSharedPreferences(BrowserActivity.this);
         editor = prefs.edit();
-//        editor.clear();
-       // editor.apply();
-        Intent inIntent = getIntent();
-        //Bundle bundle = getIntent().getExtras();
-        String word = inIntent.getStringExtra("read");
-        //titleFlag = prefs.getAll().size()!=0;
-        if(word!=null){
-            Log.d("WORD", word);
-            selectWeb(word);
-        }
 
+       // editor.clear();
+       // editor.apply();
         fragmentManager = getSupportFragmentManager();
         Fragment fragment;
         if ((fragment = fragmentManager.findFragmentById(R.id.browser_control)) instanceof BrowserControlFragment)
@@ -105,46 +88,18 @@ public class BrowserActivity extends AppCompatActivity implements PageControlFra
                         .commit();
             }
         }
-
     }
 
     @Override
-    protected void onResume() {
-        super.onResume();
-        Intent inIntent = getIntent();
-        //Bundle bundle = getIntent().getExtras();
-        String word = inIntent.getStringExtra("read");
-        //titleFlag = prefs.getAll().size()!=0;
-        if(word!=null){
-            Log.d("WORD", word);
-            selectWeb(word);
-        }
+    public boolean onCreateOptionsMenu(Menu menu){
+        getMenuInflater().inflate(R.menu.app_menu, menu);
+        return super.onCreateOptionsMenu(menu);
     }
 
     @Override
-    protected void onStart() {
-        super.onStart();
-        Intent inIntent = getIntent();
-        //Bundle bundle = getIntent().getExtras();
-        String word = inIntent.getStringExtra("read");
-        //titleFlag = prefs.getAll().size()!=0;
-        if(word!=null){
-            Log.d("WORD", word);
-            selectWeb(word);
-        }
-    }
-
-    @Override
-    protected void onRestart() {
-        super.onRestart();
-        Intent inIntent = getIntent();
-        //Bundle bundle = getIntent().getExtras();
-        String word = inIntent.getStringExtra("read");
-        //titleFlag = prefs.getAll().size()!=0;
-        if(word!=null){
-            Log.d("WORD", word);
-            selectWeb(word);
-        }
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        Toast.makeText(this, "Sharing", Toast.LENGTH_SHORT).show();
+        return super.onOptionsItemSelected(item);
     }
 
     private  void clearId(){
@@ -166,6 +121,8 @@ public class BrowserActivity extends AppCompatActivity implements PageControlFra
         // Save list of open pages for activity restart
         outState.putSerializable(FRAG_KEY, newFrag);
     }
+
+
     @Override
     public void selectWeb (String urlString){
         if (newFrag.size() > 0) {
@@ -206,34 +163,29 @@ public class BrowserActivity extends AppCompatActivity implements PageControlFra
 
     @Override
     public void newBookmark() {
-        //newIntent.putExtra(MESSAGE_KEY, pagerFragment.getCurrentTitle());
-
         if(pagerFragment.newFrag.size()!=0) {
-            //if(count > 0) {
-             //   count =  preferences.getAll().size();
-          //  }
-          //  editor.putString("string["+count+"]", pagerFragment.getCurrentTitle());
-            //count++;
-            //editor.putInt(COUNT_KEY, count);
             editor.putString(pagerFragment.getCurrentTitle(), pagerFragment.getCurrentUrl());
-            String dat = prefs.getString(pagerFragment.getCurrentTitle(), pagerFragment.getCurrentUrl());
-            Log.d("WHAT", dat);
             editor.apply();
-            count = prefs.getAll().size();
-            Log.d("BAD", String.valueOf(count));
-            Map<String, ?> allEntries = prefs.getAll();
-            for (Map.Entry<String, ?> entry : allEntries.entrySet()) {
-                Log.d("map values", entry.getKey() + ": " + entry.getValue().toString());
-                Log.d("this", entry.getValue().toString());
-                Log.d("that", entry.getKey());
-            }
-
         }
     }
 
     @Override
     public void savedBookmark() {
-        startActivity(newIntent);
+        startActivityForResult(newIntent, 7);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(requestCode == 7){
+            if ((resultCode == RESULT_OK)){
+                String word = data.getStringExtra(WORD);
+                if(word!=null){
+                    selectWeb(word);
+                    Log.d("yess", word);
+                }
+            }
+        }
     }
 
     @Override
@@ -243,6 +195,5 @@ public class BrowserActivity extends AppCompatActivity implements PageControlFra
         }
         notifyWebsites();
     }
-
 }
 

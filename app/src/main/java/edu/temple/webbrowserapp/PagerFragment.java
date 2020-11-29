@@ -100,7 +100,13 @@ public class PagerFragment extends Fragment {
 
         return frame;
     }
-
+   /* @Override
+    public void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        //pageSlider.onSaveInstanceState();
+       // pageSlider.
+                //saveState(outState);
+    }*/
    public void notifyWebs() {
        pageSlider.getAdapter().notifyDataSetChanged();
    }

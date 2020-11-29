@@ -12,6 +12,7 @@
     <string name="close_button">Close</string>
     <string name="text">Text</string>
     <string name="image_view">Image view</string>
+    <string name="share_button">Share button</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
