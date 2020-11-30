@@ -43,6 +43,7 @@ public class BrowserControlFragment extends Fragment {
          showBookmarks = frame.findViewById(R.id.showBookmarks);
 
 
+
           View.OnClickListener bookMarkBtns = new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

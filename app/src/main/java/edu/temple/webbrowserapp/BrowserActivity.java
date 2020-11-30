@@ -98,7 +98,18 @@ public class BrowserActivity extends AppCompatActivity implements PageControlFra
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        Toast.makeText(this, "Sharing", Toast.LENGTH_SHORT).show();
+       // Toast.makeText(this, "Sharing", Toast.LENGTH_SHORT).show();
+        Intent intent = new Intent();
+        intent.setAction(Intent.ACTION_SEND);
+        if(pagerFragment.newFrag.size()!=0) {
+            intent.putExtra(Intent.EXTRA_TEXT, pagerFragment.getCurrentUrl());
+        }
+       // intent.putExtra(Intent.,"https://www.temple.edu");
+       // intent.setType("");
+        if(intent.resolveActivity(getPackageManager())!=null) {
+            //startActivity(new android.content.Intent(Intent.ACTION_SEND, android.net.Uri.parse("https://www.temple.edu")));
+            startActivity(intent);
+        }
         return super.onOptionsItemSelected(item);
     }
 
