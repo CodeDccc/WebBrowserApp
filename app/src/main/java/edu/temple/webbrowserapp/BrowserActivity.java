@@ -96,8 +96,9 @@ public class BrowserActivity extends AppCompatActivity implements PageControlFra
         if(uri != null){
             Log.d("right", uri.toString());
             String uriString = uri.toString();
-            selectWeb(uriString);
+
         }
+
     }
 
     @Override

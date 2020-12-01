@@ -1,10 +1,13 @@
 package edu.temple.webbrowserapp;
 import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -63,13 +66,16 @@ public class PageControlFragment extends Fragment {
                 parentActivity.selectForward();
             }
         });
+
         return frame;
     }
     public void updateUrlString(String urlString){
         editText.setText(urlString);
     }
-    public String retUrl(){
-        return editText.getText().toString();
+    public void retUrl(String uri){
+        editText.setText(uri);
+        parentActivity.selectWeb(fixUrl(((EditText)editText).getText().toString()));
+        //return editText.getText().toString();
     }
     private String fixUrl(String urlString) {
         if ((urlString.startsWith("http://") )|| (urlString.startsWith("https://"))) {

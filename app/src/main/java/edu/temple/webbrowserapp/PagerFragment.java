@@ -26,6 +26,7 @@ public class PagerFragment extends Fragment {
     private ViewPager pageSlider;
     private updates parentActivity;
     ArrayList<PageViewerFragment> newFrag;
+
     public PagerFragment() {
         // Required empty public constructor
     }

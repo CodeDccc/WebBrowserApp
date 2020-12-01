@@ -8,13 +8,15 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import android.os.Parcel;
+import android.os.Parcelable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
-public class PageViewerFragment extends Fragment {
+public class PageViewerFragment extends Fragment implements Parcelable {
     private static final String URL_KEY = "url";
     private View frame;
     private WebView webView;
@@ -23,6 +25,22 @@ public class PageViewerFragment extends Fragment {
     public PageViewerFragment() {
         // Required empty public constructor
     }
+
+    protected PageViewerFragment(Parcel in) {
+        urlString = in.readString();
+    }
+
+    public static final Creator<PageViewerFragment> CREATOR = new Creator<PageViewerFragment>() {
+        @Override
+        public PageViewerFragment createFromParcel(Parcel in) {
+            return new PageViewerFragment(in);
+        }
+
+        @Override
+        public PageViewerFragment[] newArray(int size) {
+            return new PageViewerFragment[size];
+        }
+    };
 
     public static PageViewerFragment newInstance(String urlString) {
         PageViewerFragment fragment = new PageViewerFragment();
@@ -117,6 +135,17 @@ public class PageViewerFragment extends Fragment {
         } else
             return "Blank Page";
     }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(urlString);
+    }
+
     interface updatable {
         void updateUrlString(String url);
         void updateTitle(String title);
