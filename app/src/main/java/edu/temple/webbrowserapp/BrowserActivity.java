@@ -8,6 +8,7 @@ import androidx.fragment.app.FragmentManager;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -88,6 +89,15 @@ public class BrowserActivity extends AppCompatActivity implements PageControlFra
                         .commit();
             }
         }
+        //get implicit intent to open
+        Intent urlIntent = getIntent();
+        Uri uri = urlIntent.getData();
+        Log.d("tot", "I came here");
+        if(uri != null){
+            Log.d("right", uri.toString());
+            String uriString = uri.toString();
+            selectWeb(uriString);
+        }
     }
 
     @Override
@@ -103,11 +113,9 @@ public class BrowserActivity extends AppCompatActivity implements PageControlFra
         intent.setAction(Intent.ACTION_SEND);
         if(pagerFragment.newFrag.size()!=0) {
             intent.putExtra(Intent.EXTRA_TEXT, pagerFragment.getCurrentUrl());
+            intent.setType("text/plain");
         }
-       // intent.putExtra(Intent.,"https://www.temple.edu");
-       // intent.setType("");
         if(intent.resolveActivity(getPackageManager())!=null) {
-            //startActivity(new android.content.Intent(Intent.ACTION_SEND, android.net.Uri.parse("https://www.temple.edu")));
             startActivity(intent);
         }
         return super.onOptionsItemSelected(item);
