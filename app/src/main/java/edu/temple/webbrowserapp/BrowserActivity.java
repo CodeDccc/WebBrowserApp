@@ -16,8 +16,6 @@ import android.view.MenuItem;
 import android.widget.Toast;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
 
 
 public class BrowserActivity extends AppCompatActivity implements PageControlFragment.webSelectable, PageViewerFragment.updatable,
@@ -32,7 +30,6 @@ public class BrowserActivity extends AppCompatActivity implements PageControlFra
     PageListFragment pageListFragment;
     PagerFragment pagerFragment;
     FragmentManager fragmentManager;
-    int count = 0;
     ArrayList<PageViewerFragment> newFrag;
     Intent newIntent;
     boolean otherFrag;
@@ -50,8 +47,6 @@ public class BrowserActivity extends AppCompatActivity implements PageControlFra
         prefs = getSharedPreferences(MESSAGE_KEY, MODE_PRIVATE);
         editor = prefs.edit();
 
-       // editor.clear();
-       // editor.apply();
         fragmentManager = getSupportFragmentManager();
         Fragment fragment;
         if ((fragment = fragmentManager.findFragmentById(R.id.browser_control)) instanceof BrowserControlFragment)
@@ -89,25 +84,27 @@ public class BrowserActivity extends AppCompatActivity implements PageControlFra
                         .commit();
             }
         }
-        //get implicit intent to open
-        Intent urlIntent = getIntent();
-        Uri uri = urlIntent.getData();
-        Log.d("tot", "I came here");
-        if(uri != null){
-            Log.d("right", uri.toString());
-            String uriString = uri.toString();
-
-        }
-
     }
 
     @Override
+    protected void onStart() {
+        super.onStart();
+        //get implicit intent to open
+        Intent urlIntent = getIntent();
+        Uri uri = urlIntent.getData();
+        if(uri != null){
+            String uriString = uri.toString();
+            selectWeb(uriString);
+        }
+    }
+
+    @Override//options for share button
     public boolean onCreateOptionsMenu(Menu menu){
         getMenuInflater().inflate(R.menu.app_menu, menu);
         return super.onCreateOptionsMenu(menu);
     }
 
-    @Override
+    @Override//select item option
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
        // Toast.makeText(this, "Sharing", Toast.LENGTH_SHORT).show();
         Intent intent = new Intent();

@@ -9,6 +9,7 @@ import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 public class BrowserControlFragment extends Fragment {
     private View frame;
@@ -16,7 +17,6 @@ public class BrowserControlFragment extends Fragment {
     private View saveBookmark;
     private View showBookmarks;
     private createdNewFrag parentActivity;
-    BrowserActivity browserActivity;
 
     public BrowserControlFragment() {
         // Required empty public constructor
@@ -49,8 +49,10 @@ public class BrowserControlFragment extends Fragment {
                 public void onClick(View v) {
                     if (v.equals(addNewFrag))
                         parentActivity.newFragNote();
-                    else if (v.equals(saveBookmark))
+                    else if (v.equals(saveBookmark)) {
                         parentActivity.newBookmark();
+                        Toast.makeText(getActivity(), "Title Saved", Toast.LENGTH_SHORT).show();
+                    }
                     else if (v.equals(showBookmarks))
                         parentActivity.savedBookmark();
                 }

@@ -15,11 +15,6 @@ import android.view.ViewGroup;
 
 import java.util.ArrayList;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link PagerFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
 public class PagerFragment extends Fragment {
     private static final String FRAG_KEY = "newFrag";
     private View frame;
@@ -101,13 +96,7 @@ public class PagerFragment extends Fragment {
 
         return frame;
     }
-   /* @Override
-    public void onSaveInstanceState(@NonNull Bundle outState) {
-        super.onSaveInstanceState(outState);
-        //pageSlider.onSaveInstanceState();
-       // pageSlider.
-                //saveState(outState);
-    }*/
+
    public void notifyWebs() {
        pageSlider.getAdapter().notifyDataSetChanged();
    }
